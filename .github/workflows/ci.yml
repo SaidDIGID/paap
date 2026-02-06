@@ -20,7 +20,7 @@ jobs:
         env:
           PORT: '7005'
         run: |
-          npm ci
+          npm i
       - name: Build
         shell: bash
         working-directory: packages/server
