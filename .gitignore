@@ -1,0 +1,107 @@
+############################
+# Node.js / JS ecosystem
+############################
+node_modules/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+############################
+# Build outputs
+############################
+dist/
+build/
+coverage/
+.tmp/
+.cache/
+out/
+.next/
+.angular/
+
+############################
+# Generated pipelines
+############################
+packages/server/pipeGenerated/
+
+############################
+# Environment variables
+############################
+.env
+.env.*
+!.env.example
+
+############################
+# Logs
+############################
+logs/
+*.log
+
+############################
+# OS junk
+############################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+############################
+# IDE / Editors
+############################
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+
+############################
+# TypeScript
+############################
+*.tsbuildinfo
+
+############################
+# Docker
+############################
+docker-data/
+*.pid
+
+############################
+# Temporary files
+############################
+*.tmp
+*.temp
+*.bak
+*.old
+
+############################
+# Angular specific
+############################
+.angular/cache/
+.angular/cache-babel-webpack/
+
+############################
+# Testing
+############################
+coverage/
+.nyc_output/
+
+############################
+# CI/CD artifacts
+############################
+artifacts/
+reports/
+
+############################
+# Secrets (important)
+############################
+secrets/
+*.pem
+*.key
+*.crt
+
+############################
+# Misc
+############################
+*.tgz
+*.zip
+*.tar.gz

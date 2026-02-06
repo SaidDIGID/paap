@@ -1,0 +1,7 @@
+{
+  "fields": [
+    { "key": "nodeVersion", "type": "select", "required": true, "options": ["18", "20", "22"] },
+    { "key": "packageManager", "type": "select", "required": true, "options": ["npm", "pnpm", "yarn"] },
+    { "key": "testCommand", "type": "string", "required": true }
+  ]
+}

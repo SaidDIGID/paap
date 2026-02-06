@@ -1,0 +1,5 @@
+{
+  "nodeVersion": "20",
+  "packageManager": "pnpm",
+  "testCommand": "pnpm test"
+}

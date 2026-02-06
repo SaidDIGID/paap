@@ -1,0 +1,6 @@
+node_build:
+  stage: build
+  image: node:{{ nodeVersion }}
+  script:
+    - {{ packageManager }} install
+    - {{ buildCommand }}

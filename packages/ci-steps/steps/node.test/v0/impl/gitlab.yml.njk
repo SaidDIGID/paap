@@ -1,0 +1,6 @@
+node_test:
+  stage: test
+  image: node:{{ nodeVersion }}
+  script:
+    - {{ packageManager }} install
+    - {{ testCommand }}

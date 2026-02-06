@@ -1,0 +1,10 @@
+{
+  "id": "node.test",
+  "version": "v0",
+  "title": "Node Test",
+  "description": "Run tests",
+  "providers": ["gitlab", "github"],
+  "stages": ["test"],
+  "jobs": ["node_test"],
+  "requires": ["nodeVersion", "packageManager", "testCommand"]
+}

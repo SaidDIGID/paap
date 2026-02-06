@@ -1,0 +1,10 @@
+{
+  "id": "node.build",
+  "version": "v0",
+  "title": "Node Build",
+  "description": "Install deps and build a Node.js project",
+  "providers": ["gitlab", "github"],
+  "stages": ["build"],
+  "jobs": ["node_build"],
+  "requires": ["nodeVersion", "packageManager", "buildCommand"]
+}
