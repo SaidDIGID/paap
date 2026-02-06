@@ -3,6 +3,9 @@ name: CI
   push:
     branches:
       - main
+    paths:
+      - "packages/server/**"
+      - ".github/workflows/ci.yml"
   pull_request: {}
 jobs:
   build:
