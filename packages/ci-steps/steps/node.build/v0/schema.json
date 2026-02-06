@@ -1,7 +1,18 @@
 {
   "fields": [
-    { "key": "nodeVersion", "type": "select", "required": true, "options": ["18", "20", "22"] },
-    { "key": "packageManager", "type": "select", "required": true, "options": ["npm", "pnpm", "yarn"] },
-    { "key": "buildCommand", "type": "string", "required": true }
+    { "key": "nodeVersion", "type": "select", "required": true, "options": ["18", "20", "22"], "label": "Node version" },
+    { "key": "packageManager", "type": "select", "required": true, "options": ["npm", "pnpm", "yarn"], "label": "Package manager" },
+    { "key": "buildCommand", "type": "string", "required": true, "label": "Build command" },
+
+    { "key": "workingDirectory", "type": "string", "required": false, "label": "Working directory", "description": "Folder where install/build commands run" },
+    { "key": "installCommand", "type": "string", "required": false, "label": "Install command", "description": "Override install command. If empty, auto based on package manager." },
+
+    { "key": "useCache", "type": "boolean", "required": false, "label": "Enable cache" },
+    { "key": "cacheKeySuffix", "type": "string", "required": false, "label": "Cache key suffix", "description": "Optional suffix to avoid cache conflicts" },
+
+    { "key": "timeoutMinutes", "type": "number", "required": false, "label": "Timeout (minutes)" },
+    { "key": "shell", "type": "select", "required": false, "options": ["bash", "pwsh"], "label": "Shell" },
+
+    { "key": "env", "type": "string", "required": false, "label": "Environment variables (JSON)", "description": "Provide JSON object: {\"KEY\":\"VALUE\"}" }
   ]
 }

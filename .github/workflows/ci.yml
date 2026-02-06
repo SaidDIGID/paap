@@ -3,9 +3,6 @@ name: CI
   push:
     branches:
       - main
-    paths:
-      - "packages/server/**"
-      - ".github/workflows/ci.yml"
   pull_request: {}
 jobs:
   build:
@@ -17,16 +14,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
       - name: Install
+        shell: bash
         working-directory: packages/server
-        run: npm install
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Install
-        working-directory: packages/server
-        run: npm install
+        env:
+          PORT: '7005'
+        run: |
+          npm ci
       - name: Build
+        shell: bash
         working-directory: packages/server
-        run: npm run build
+        env:
+          PORT: '7005'
+        run: |
+          npm run build

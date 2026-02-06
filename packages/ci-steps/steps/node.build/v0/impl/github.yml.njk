@@ -2,7 +2,46 @@
   uses: actions/setup-node@v4
   with:
     node-version: {{ nodeVersion }}
+{%- if useCache %}
+    cache: {{ packageManager }}
+{%- endif %}
+
 - name: Install
-  run: {{ packageManager }} install
+  shell: {{ shell | default("bash") }}
+{%- if workingDirectory and workingDirectory != "." %}
+  working-directory: {{ workingDirectory }}
+{%- endif %}
+{%- set envObj = (env | default("") | fromJson) %}
+{%- if envObj and (envObj | length) > 0 %}
+  env:
+{%- for k, v in envObj %}
+    {{ k }}: "{{ v }}"
+{%- endfor %}
+{%- endif %}
+  run: |
+{%- if installCommand and installCommand != "" %}
+    {{ installCommand }}
+{%- else %}
+{%- if packageManager == "npm" %}
+    npm ci
+{%- elif packageManager == "yarn" %}
+    yarn install --frozen-lockfile
+{%- else %}
+    pnpm install
+{%- endif %}
+{%- endif %}
+
 - name: Build
-  run: {{ buildCommand }}
+  shell: {{ shell | default("bash") }}
+{%- if workingDirectory and workingDirectory != "." %}
+  working-directory: {{ workingDirectory }}
+{%- endif %}
+{%- set envObj2 = (env | default("") | fromJson) %}
+{%- if envObj2 and (envObj2 | length) > 0 %}
+  env:
+{%- for k, v in envObj2 %}
+    {{ k }}: "{{ v }}"
+{%- endfor %}
+{%- endif %}
+  run: |
+    {{ buildCommand }}

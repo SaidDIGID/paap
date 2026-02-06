@@ -29,6 +29,15 @@ export class StepsService {
       new nunjucks.FileSystemLoader(this.stepsRoot, { noCache: true }),
       { autoescape: false, throwOnUndefined: true }
     );
+    this.nj.addFilter("fromJson", (str) => {
+  try {
+    if (!str || typeof str !== "string") return {};
+    const obj = JSON.parse(str);
+    return obj && typeof obj === "object" ? obj : {};
+  } catch {
+    return {};
+  }
+});
   }
 
   listSteps() {

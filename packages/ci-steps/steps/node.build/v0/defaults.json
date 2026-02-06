@@ -1,5 +1,14 @@
 {
   "nodeVersion": "20",
   "packageManager": "pnpm",
-  "buildCommand": "pnpm run build"
+  "buildCommand": "pnpm run build",
+
+  "workingDirectory": ".",
+  "useCache": true,
+  "cacheKeySuffix": "",
+  "installCommand": "",
+  "timeoutMinutes": 15,
+
+  "env": {},
+  "shell": "bash"
 }

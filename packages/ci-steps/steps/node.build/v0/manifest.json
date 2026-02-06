@@ -2,9 +2,10 @@
   "id": "node.build",
   "version": "v0",
   "title": "Node Build",
-  "description": "Install deps and build a Node.js project",
+  "description": "Install deps and build a Node.js project (GitLab CI + GitHub Actions)",
   "providers": ["gitlab", "github"],
   "stages": ["build"],
   "jobs": ["node_build"],
-  "requires": ["nodeVersion", "packageManager", "buildCommand"]
+  "requires": ["nodeVersion", "packageManager", "buildCommand"],
+  "provides": ["NODE_BUILD_OUTPUT"]
 }
