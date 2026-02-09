@@ -23,7 +23,7 @@
     {{ installCommand }}
 {%- else %}
 {%- if packageManager == "npm" %}
-    npm ci
+    npm i
 {%- elif packageManager == "yarn" %}
     yarn install --frozen-lockfile
 {%- else %}
