@@ -2,10 +2,7 @@
   uses: actions/setup-node@v4
   with:
     node-version: {{ nodeVersion }}
-{%- if useCache %}
-    cache: {{ packageManager }}
-{%- endif %}
-
+    
 - name: Install
   shell: {{ shell | default("bash") }}
 {%- if workingDirectory and workingDirectory != "." %}
