@@ -1,0 +1,19 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="header-content">
+      <h1>🚀 {{ title }}</h1>
+      <div class="health-status" [class.healthy]="isHealthy" [class.unhealthy]="!isHealthy">
+        <span class="status-dot"></span>
+        <span>{{ isHealthy ? 'Connected' : 'Disconnected' }}</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <p>Pipeline As A Product - MVP &copy; 2024</p>
+  </footer>
+</div>

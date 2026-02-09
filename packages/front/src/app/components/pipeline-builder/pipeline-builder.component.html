@@ -1,0 +1,260 @@
+<div class="pipeline-builder">
+  <!-- Alerts -->
+  <div class="alerts">
+    <div class="alert alert-error" *ngIf="error">
+      <span class="alert-icon">⚠️</span>
+      <span>{{ error }}</span>
+      <button class="alert-close" (click)="error = null">×</button>
+    </div>
+    
+    <div class="alert alert-success" *ngIf="success">
+      <span class="alert-icon">✓</span>
+      <span>{{ success }}</span>
+      <button class="alert-close" (click)="success = null">×</button>
+    </div>
+  </div>
+
+  <div class="builder-container">
+    <!-- Left Panel: Configuration -->
+    <div class="left-panel">
+      <div class="card">
+        <h2>1. Select Provider</h2>
+        <div class="provider-selector">
+          <button 
+            class="provider-btn"
+            [class.active]="selectedProvider === 'github'"
+            (click)="onProviderChange('github')">
+            <span class="provider-icon">🐙</span>
+            GitHub Actions
+          </button>
+          <button 
+            class="provider-btn"
+            [class.active]="selectedProvider === 'gitlab'"
+            (click)="onProviderChange('gitlab')">
+            <span class="provider-icon">🦊</span>
+            GitLab CI
+          </button>
+        </div>
+      </div>
+
+      <div class="card" *ngIf="selectedProvider">
+        <h2>2. Add Steps</h2>
+        
+        <div class="step-selector">
+          <div class="form-group">
+            <label>Select Step:</label>
+            <select 
+              class="form-control"
+              [(ngModel)]="selectedStepId"
+              (change)="onStepSelect(selectedStepId)"
+              [disabled]="isLoadingSteps">
+              <option value="">-- Choose a step --</option>
+              <option *ngFor="let step of availableSteps" [value]="step.id">
+                {{ step.name || step.id }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group" *ngIf="selectedStepId">
+            <label>Version:</label>
+            <select 
+              class="form-control"
+              [(ngModel)]="selectedVersion"
+              [disabled]="isLoadingVersions">
+              <option value="">-- Choose version --</option>
+              <option *ngFor="let version of availableVersions" [value]="version">
+                {{ version }}
+              </option>
+            </select>
+          </div>
+
+          <button 
+            class="btn btn-primary btn-block"
+            (click)="addStepToPipeline()"
+            [disabled]="!selectedStepId || !selectedVersion">
+            + Add Step to Pipeline
+          </button>
+        </div>
+      </div>
+
+      <div class="card" *ngIf="pipelineSteps.length > 0">
+        <h2>3. Pipeline Steps ({{ pipelineSteps.length }})</h2>
+        
+        <div class="pipeline-steps-list">
+          <div class="step-item" *ngFor="let step of pipelineSteps; let i = index">
+            <div class="step-header">
+              <span class="step-number">{{ i + 1 }}</span>
+              <span class="step-name">{{ step.id }} &#64; {{ step.version }}</span>
+            </div>
+            <div class="step-actions">
+              <button 
+                class="btn-icon"
+                (click)="moveStepUp(i)"
+                [disabled]="i === 0"
+                title="Move up">
+                ↑
+              </button>
+              <button 
+                class="btn-icon"
+                (click)="moveStepDown(i)"
+                [disabled]="i === pipelineSteps.length - 1"
+                title="Move down">
+                ↓
+              </button>
+              <button 
+                class="btn-icon btn-danger"
+                (click)="removeStep(i)"
+                title="Remove">
+                🗑️
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button 
+            class="btn btn-success btn-block"
+            (click)="renderPipeline()"
+            [disabled]="isRendering">
+            {{ isRendering ? 'Rendering...' : '🚀 Generate Pipeline' }}
+          </button>
+          
+          <button 
+            class="btn btn-outline btn-block"
+            (click)="resetPipeline()">
+            🔄 Reset Pipeline
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Preview -->
+    <div class="right-panel">
+      <div class="card preview-card">
+        <div class="preview-header">
+          <h2>Pipeline Preview</h2>
+          <div class="preview-actions" *ngIf="showPreview">
+            <button class="btn btn-sm btn-primary" (click)="openExportModal()">
+              📤 Export
+            </button>
+            <button class="btn btn-sm btn-outline" (click)="downloadPipeline()">
+              💾 Download
+            </button>
+          </div>
+        </div>
+
+        <div class="preview-content" *ngIf="!showPreview">
+          <div class="empty-state">
+            <span class="empty-icon">📄</span>
+            <p>No pipeline generated yet</p>
+            <p class="empty-hint">Configure and generate your pipeline to see the preview</p>
+          </div>
+        </div>
+
+        <div class="preview-content" *ngIf="showPreview">
+          <pre class="code-preview"><code>{{ renderedPipeline }}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Export Modal -->
+<div class="modal-overlay" *ngIf="showExportModal" (click)="closeExportModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Export Pipeline to {{ selectedProvider === 'github' ? 'GitHub' : 'GitLab' }}</h3>
+      <button class="modal-close" (click)="closeExportModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Access Token *</label>
+        <input 
+          type="password"
+          class="form-control"
+          [(ngModel)]="exportToken"
+          placeholder="Enter your {{ selectedProvider === 'github' ? 'GitHub' : 'GitLab' }} token">
+      </div>
+
+      <div *ngIf="selectedProvider === 'github'">
+        <div class="form-group">
+          <label>Repository Owner *</label>
+          <input 
+            type="text"
+            class="form-control"
+            [(ngModel)]="exportOwner"
+            placeholder="e.g., username or organization">
+        </div>
+
+        <div class="form-group">
+          <label>Repository Name *</label>
+          <input 
+            type="text"
+            class="form-control"
+            [(ngModel)]="exportRepo"
+            placeholder="e.g., my-project">
+        </div>
+      </div>
+
+      <div *ngIf="selectedProvider === 'gitlab'">
+        <div class="form-group">
+          <label>Project ID *</label>
+          <input 
+            type="text"
+            class="form-control"
+            [(ngModel)]="exportProjectId"
+            placeholder="e.g., 12345678">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Base Branch</label>
+        <input 
+          type="text"
+          class="form-control"
+          [(ngModel)]="exportBaseBranch"
+          placeholder="main">
+      </div>
+
+      <div class="form-group">
+        <label>New Branch Name</label>
+        <input 
+          type="text"
+          class="form-control"
+          [(ngModel)]="exportBranch"
+          placeholder="ci/generated-pipeline">
+      </div>
+
+      <div class="form-group">
+        <label>Commit Message</label>
+        <input 
+          type="text"
+          class="form-control"
+          [(ngModel)]="exportMessage"
+          placeholder="Add generated CI pipeline">
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox"
+            [(ngModel)]="exportCreatePR">
+          Create Pull/Merge Request
+        </label>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="closeExportModal()">
+        Cancel
+      </button>
+      <button 
+        class="btn btn-primary"
+        (click)="exportPipeline()"
+        [disabled]="isExporting || !exportToken">
+        {{ isExporting ? 'Exporting...' : '📤 Export' }}
+      </button>
+    </div>
+  </div>
+</div>

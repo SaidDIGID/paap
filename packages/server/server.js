@@ -5,9 +5,14 @@ import { composeGitLabPipeline, composeGitHubWorkflow } from "./services/pipelin
 import fs from "fs";
 import path from "path";
 import { exportToGitHub, exportToGitLab } from "./services/exportServices.js";
-
+import cors from "cors";   
 
 const app = express();
+// ✅ Enable CORS for ALL origins
+app.use(cors());
+
+// Optional: allow preflight explicitly (sometimes needed)
+app.options(/.*/, cors());
 app.use(express.json({ limit: "2mb" }));
 
 const PORT = Number(process.env.PORT || 7005);
