@@ -1,7 +1,7 @@
 {
   "nodeVersion": "20",
-  "packageManager": "pnpm",
-  "buildCommand": "pnpm run build",
+  "packageManager": "npm",
+  "buildCommand": "npm run build",
 
   "workingDirectory": ".",
   "useCache": true,
